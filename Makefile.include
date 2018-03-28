@@ -1,0 +1,53 @@
+# -*- makefile -*-
+
+ifndef TARGET
+	echo "error TARGET not defined! you must specify TARGET"
+endif
+
+ifndef CC_PREX
+CC_PREX = 
+endif
+
+ifndef XSYSTEM_DIR
+XSYSTEM_DIR &(PWD)
+endif
+
+CC = $(CC_PREX)gcc
+AR = $(CC_PREX)ar
+LD = $(CC_PREX)ld
+STRIP = $(CC_PREX)strip
+
+CFLAGS += -O3 -Wall -std=gnu99
+LFLAGS += -L./
+LIBS += -lrt
+#LIBS += -lpthread -lm -lrt
+
+
+
+COMMA := ,
+
+### src find path #####################################
+VPATH = .:.
+
+### include find path #####################################
+
+
+### object file #####################################
+
+
+###### build rules #######################################
+
+all: $(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) $(LFLAGS) $(INCPATH) -o $@ $(OBJECTS) $(LIBS)
+	@$(STRIP) $(TARGET)
+	@chmod +x $(TARGET)
+
+
+$(OBJECTS):%.o:%.c
+	$(CC) $(CFLAGS) $(LFLAGS) $(INCPATH) -o $@ -c $< $(LIBS)
+
+clean:
+	$(RM) $(TARGET)
+	$(RM) $(OBJECTS)

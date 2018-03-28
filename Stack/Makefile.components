@@ -1,0 +1,8 @@
+### include find path #####################################
+
+INCPATH += -I$(XSYSTEM_DIR)/
+INCPATH += -I$(XSYSTEM_DIR)/LinkList
+
+### object file ###############################################
+
+OBJECTS += $(XSYSTEM_DIR)/LinkList/LinkList.o
