@@ -1,4 +1,4 @@
-XSYSTEM_DIR	= ../
+XSYSTEM_DIR	= ..
 
 CC_PREX = 
 

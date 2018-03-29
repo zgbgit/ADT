@@ -1,20 +1,14 @@
 #ifndef _LINKLIST_H
 #define _LINKLIST_H
 
+#include "err.h"
+
 typedef struct _ElemType{
 	int freq;
 	int pci;
 }ElemType;
 
-typedef enum {
-	OK,
-	ERROR,
-	INFEASIBLE,
-	OVERFLOW
-}Status;
-
 typedef struct _LNode{	/*节点类型*/
-	ElemType	data;
 	struct _LNode * next;
 }LNode;
 
@@ -24,8 +18,9 @@ typedef struct {
 	int len;			/*指示线性链表中数据的个数*/
 }LinkList;
 
+
 /*分配由p指向的值为e的节点，并返回OK；若分配失败，则返回ERROR*/
-Status LinkList_MakeNode( LNode ** p, ElemType e );
+Status LinkList_MakeNode( LNode * p );
 /*释放p所指向的结点*/
 void LinkList_FreeNode( LNode * p);
 /*构造一个空的线性链表L*/
@@ -60,10 +55,6 @@ Status LinkList_InsFirst( LinkList * L ,LNode * h );
 Status LinkList_InsBefore( LinkList * L , LNode * p , LNode * s);
 /*在线性链表结点p之后插入结点s*/
 Status LinkList_InsAfter( LinkList * L , LNode * p , LNode * s);
-/*更新结点p的值为e*/
-Status LinkList_SetCurElem( LNode * p ,ElemType e);
-/*返回p所指结点中数据元素值*/
-ElemType LinkList_GetCurElem( LNode * p );
 /*线性表为空，返回OK，否则返回ERROR*/
 Status LinkList_ListEmpty( LinkList * L );
 /*将指针p所指向的一串结点链接在线性链表L的最后一个结点之后*/

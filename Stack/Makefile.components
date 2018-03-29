@@ -2,7 +2,9 @@
 
 INCPATH += -I$(XSYSTEM_DIR)/
 INCPATH += -I$(XSYSTEM_DIR)/LinkList
+INCPATH += -I$(XSYSTEM_DIR)/utils
 
 ### object file ###############################################
 
 OBJECTS += $(XSYSTEM_DIR)/LinkList/LinkList.o
+OBJECTS += $(XSYSTEM_DIR)/utils/err.o

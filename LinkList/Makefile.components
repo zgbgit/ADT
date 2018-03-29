@@ -1,7 +1,7 @@
 ### include find path #####################################
 
 INCPATH += -I$(XSYSTEM_DIR)/
-
+INCPATH += -I$(XSYSTEM_DIR)/utils
 
 ### object file ###############################################
 

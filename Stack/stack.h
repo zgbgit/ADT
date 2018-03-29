@@ -1,6 +1,7 @@
 #ifndef _STACK_H
 #define _STACK_H
 #include "LinkList.h"
+#include "err.h"
 
 /*将堆栈作为链表实现*/  
 typedef LinkList Stack;
@@ -15,11 +16,13 @@ typedef LNode SNode;
 #define Stack_Peek(Stack)	((Stack->head) == NULL ? NULL : (Stack)->head->data)  
 /*宏，获取栈的大小*/ 
 #define Stack_Size 			LinkList_ListLength                                                  
+/*栈为空，返回OK，否则返回ERROR*/
+#define Stack_Empty 		LinkList_ListEmpty
 
 /*在栈中插入元素e*/
-Status Stack_Push(Stack * s , ElemType e);
+Status Stack_Push(Stack * s , SNode * sn);
 /*若栈不为空，删除栈顶元素，用e返回其值，并返回OK，否则返回ERROR*/
-Status Stack_Pop(Stack * s , ElemType * e);
+Status Stack_Pop(Stack * s , SNode ** sn);
 /*依次对栈s中的每个元素调用函数visit*/
 Status Stack_Traverse( Stack * s , Status (* visit)(SNode * p));
 

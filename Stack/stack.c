@@ -4,29 +4,22 @@
 #include <unistd.h>
 #include "Stack.h"
 
-Status Stack_Push(Stack * s , ElemType e)
+Status Stack_Push(Stack * s , SNode * sn)
 {
 	Status ret;
-	LNode * p_tmp = NULL;
 	
-	ret = LinkList_MakeNode(&p_tmp,e);
-	ret = LinkList_AddNodeTail(s,p_tmp);
+	ret = LinkList_AddNodeTail(s,sn);
 
 	return ret;
 }
 
-Status Stack_Pop(Stack * s , ElemType * e)
+Status Stack_Pop(Stack * s , SNode ** sn)
 {
 	Status ret;
-	LNode * p_tmp = NULL;
 
-	p_tmp = LinkList_GetLast(s);
-	if(p_tmp != NULL)
-	{
-		memcpy(e, p_tmp, sizeof(ElemType));
-	}
+	*sn = LinkList_GetLast(s);
 	
-	ret = LinkList_RemoveNode(s,p_tmp);
+	ret = LinkList_RemoveNode(s,*sn);
 
 	return ret;
 }

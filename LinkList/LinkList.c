@@ -4,23 +4,18 @@
 #include <unistd.h>
 #include "LinkList.h"
 
-Status LinkList_MakeNode( LNode ** p, ElemType e )
+Status LinkList_MakeNode( LNode * p )
 {
-	LNode * p_tmp = NULL;
-	
-	p_tmp = (LNode *)malloc(sizeof(LNode));
-	if(NULL == p_tmp)
+	if(NULL == p)
 	{
 		printf("[ERR]: %s %d\n",__func__,__LINE__);
 		return ERROR;
 	}
-	memcpy(&p_tmp->data, &e, sizeof(ElemType));
-	p_tmp->next = NULL;
-	*p = p_tmp;
+	p->next = NULL;
 
 	return OK;
 }
-
+/*
 Status LinkList_SetCurElem( LNode * p ,ElemType e)
 {
 	if(NULL == p)
@@ -46,7 +41,7 @@ ElemType LinkList_GetCurElem( LNode * p )
 
 	memcpy(&e, &p->data, sizeof(ElemType));
 	return e;
-}
+}*/
 
 void LinkList_FreeNode( LNode * p)
 {
@@ -151,7 +146,6 @@ Status LinkList_DelFirst( LinkList * L , LNode * p )
 	}
 	L->head = p->next;
 	L->len = LinkList_ListLength(L);
-	LinkList_FreeNode(p);
 	return OK;
 }
 
@@ -180,7 +174,6 @@ Status LinkList_RemoveNode( LinkList * L , LNode * p )
 		L->tail = p_prior;
 	}
 	L->len = LinkList_ListLength(L);
-	LinkList_FreeNode(p);
 
 	return OK;
 }
