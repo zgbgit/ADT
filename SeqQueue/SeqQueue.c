@@ -138,17 +138,6 @@ QuNode * SeqQueue_GetHead( SeqQueue * Q )
 	return Q->head;
 }
 
-Status SeqQueue_GetNodeIndex(SeqQueue * Q)
-{
-	if(unlikely(NULL == Q))
-	{
-		printf("[ERR]: %s %d\n",__func__,__LINE__);
-		return ERROR;
-	}
-
-	return OK;
-}
-
 Status SeqQueue_Destory( SeqQueue ** Q )
 {
 	if(NULL == *Q || NULL == Q)
@@ -164,7 +153,7 @@ Status SeqQueue_Destory( SeqQueue ** Q )
 
 Status SeqQueue_Traverse( SeqQueue * Q , Status (* visit)(QuNode * p))
 {
-	QuNode * p_tmp = NULL;
+	QuNode * q_tmp = NULL;
 
 	if( NULL == Q)
 	{
@@ -172,15 +161,38 @@ Status SeqQueue_Traverse( SeqQueue * Q , Status (* visit)(QuNode * p))
 		return ERROR;
 	}
 
-	p_tmp = Q->head;
-	while(p_tmp != NULL)
+	q_tmp = Q->head;
+	while(q_tmp != NULL)
 	{
-		(* visit)(p_tmp);
-		p_tmp = p_tmp->next;
+		(* visit)(q_tmp);
+		q_tmp = q_tmp->next;
 	}
 	
 	return OK;
 }
 
+Status SeqQueue_RemoveQuNode( SeqQueue * Q )
+{
+	if( NULL == Q)
+	{
+		printf("[ERR]: %s %d\n",__func__,__LINE__);
+		return ERROR;
+	}
+	
+	if(OK == SeqQueue_Empty(Q))
+	{
+		return ERROR;
+	}
+
+	if(Q->head == Q->tail)
+	{
+		Q->head = NULL;
+		Q->tail = NULL;
+		return OK;
+	}
+
+	Q->head = Q->head->next;
+	return OK;
+}
 
 

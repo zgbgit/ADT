@@ -15,7 +15,7 @@ typedef struct _queue_item{
 	QuNode qnode;
 }queue_item;
 
-#define USER_QUEUE_LEN 2
+#define USER_QUEUE_LEN 3
 
 static Status ShowItem(QuNode * p)
 {	
@@ -55,6 +55,37 @@ int main(int ac, char *av[])
 	printf("\nSeqQueue add freq 39148 pci 222.\n");
 	printf("index = %d\n",queue_a->index);
 	SeqQueue_AddQuNode(queue_a,&item[queue_a->index].qnode);
+	SeqQueue_Traverse(queue_a,ShowItem);
+
+	item[queue_a->index].item.freq = 40936;
+	item[queue_a->index].item.pci = 223;
+	printf("\nSeqQueue add freq 40936 pci 223.\n");
+	printf("index = %d\n",queue_a->index);
+	SeqQueue_AddQuNode(queue_a,&item[queue_a->index].qnode);
+	SeqQueue_Traverse(queue_a,ShowItem);
+
+	c_assert_return (ERROR == SeqQueue_Empty(queue_a));
+	printf("\nRemove ");
+	ShowItem(SeqQueue_GetHead(queue_a));
+	SeqQueue_RemoveQuNode(queue_a);
+	SeqQueue_Traverse(queue_a,ShowItem);
+
+	c_assert_return (ERROR == SeqQueue_Empty(queue_a));
+	printf("\nRemove ");
+	ShowItem(SeqQueue_GetHead(queue_a));
+	SeqQueue_RemoveQuNode(queue_a);
+	SeqQueue_Traverse(queue_a,ShowItem);
+
+	c_assert_return (ERROR == SeqQueue_Empty(queue_a));
+	printf("\nRemove ");
+	ShowItem(SeqQueue_GetHead(queue_a));
+	SeqQueue_RemoveQuNode(queue_a);
+	SeqQueue_Traverse(queue_a,ShowItem);
+
+	c_assert_return (ERROR == SeqQueue_Empty(queue_a));
+	printf("\nRemove ");
+	ShowItem(SeqQueue_GetHead(queue_a));
+	SeqQueue_RemoveQuNode(queue_a);
 	SeqQueue_Traverse(queue_a,ShowItem);
 
 	SeqQueue_Destory(&queue_a);
