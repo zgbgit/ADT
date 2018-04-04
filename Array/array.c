@@ -96,13 +96,175 @@ Status Array_InsertSort(Array * arr)
 		{
 			tmp = *(arr->base + i);//将要进行插入的值备份
 			//arr->base[i] = arr->base[i-1];//有序表中最后一个元素移动到当前有序表最后
-			for(j = i - 1;tmp < *(arr->base + j);j--)
+			for(j = i - 1;tmp < *(arr->base + j);j-=1)
 			{
 				*(arr->base + j + 1) = *(arr->base + j);//有序表后移
 			}
 			*(arr->base + j + 1) = tmp;//插入
 		}
 	}
+
+	return OK;
+}
+
+static Status Array_ShellInsert(Array * arr, int dk)
+{
+	int i,j;
+	char tmp;
+	
+	if(NULL == arr)
+	{
+		printf("[ERR]: %s %d\n",__func__,__LINE__);
+		return ERROR;
+	}
+
+	if(arr->len < 2)
+	{
+		return OK;
+	}
+
+	for(i = dk;i < arr->len;i++)
+	{
+		if(*(arr->base + i) < *(arr->base + i - dk))
+		{
+			tmp = *(arr->base + i);
+			
+			for(j = i - dk;tmp < *(arr->base + j);j-=dk)
+			{
+				*(arr->base + j + dk) = *(arr->base + j);
+			}
+			*(arr->base + j + dk) = tmp;
+		}
+	}
+
+	return OK;
+}
+
+Status Array_ShellSort(Array * arr)
+{
+	int dlta[] = {9,5,3,2,1};
+	int i;
+
+	for(i = 0;i < 5;i++)
+	{
+		Array_ShellInsert(arr,dlta[i]);
+	}
+
+	return OK;
+}
+
+Status Array_BubbleSort(Array * arr)
+{
+	int i,j;
+	char tmp;
+	
+	if(NULL == arr)
+	{
+		printf("[ERR]: %s %d\n",__func__,__LINE__);
+		return ERROR;
+	}
+
+	if(arr->len < 2)
+	{
+		return OK;
+	}
+
+	for(i = 0;i < (arr->len - 1); i++)
+	{
+		for(j = 0;j < (arr->len - i - 1);j++)
+		{
+			if(*(arr->base + j + 1) < *(arr->base + j))
+			{
+				tmp = *(arr->base + j + 1);
+				*(arr->base + j + 1) = *(arr->base + j);
+				*(arr->base + j) = tmp;
+			}
+		}
+	}
+	return OK;
+}
+
+static int Array_Partition(Array * arr, int low, int high)
+{
+	char pivokey = 0;
+
+	if(NULL == arr)
+	{
+		printf("[ERR]: %s %d\n",__func__,__LINE__);
+		return ERROR;
+	}
+
+	pivokey = *(arr->base + low);
+	while(low < high)
+	{
+		while((low < high) && (*(arr->base + high) >= pivokey)) --high;
+		*(arr->base + low) = *(arr->base + high);
+		while((low < high) && (*(arr->base + low) <= pivokey)) ++low;
+		*(arr->base + high) = *(arr->base + low);
+	}
+	*(arr->base + low) = pivokey;
+
+	return low;
+}
+
+static Status Array_QuickSortRecursion(Array * arr, int low, int high)
+{
+	int pivoloc = 0;
+	
+	if(low < high)
+	{
+		pivoloc = Array_Partition(arr,low,high);
+		Array_QuickSortRecursion(arr,low,pivoloc - 1);
+		Array_QuickSortRecursion(arr,pivoloc + 1,high);
+	}
+
+	return OK;
+}
+
+Status Array_QuickSort(Array * arr)
+{
+	if(NULL == arr)
+	{
+		printf("[ERR]: %s %d\n",__func__,__LINE__);
+		return ERROR;
+	}
+	
+	Array_QuickSortRecursion(arr,0,arr->len - 1);
+
+	return OK;
+}
+
+static Status Array_QuickSortRecursion_Improve(Array * arr, int low, int high)
+{
+	int pivoloc = 0;
+	
+	if(low < high)
+	{
+		pivoloc = Array_Partition(arr,low,high);
+		if(pivoloc >= ((low + high) >> 1))
+		{
+			Array_QuickSortRecursion(arr,pivoloc + 1,high);
+			Array_QuickSortRecursion(arr,low,pivoloc - 1);
+		}
+		else
+		{
+			Array_QuickSortRecursion(arr,low,pivoloc - 1);
+			Array_QuickSortRecursion(arr,pivoloc + 1,high);
+		}
+	}
+
+	return OK;
+}
+
+Status Array_QuickSort_Improve(Array * arr)
+{
+	if(NULL == arr)
+	{
+		printf("[ERR]: %s %d\n",__func__,__LINE__);
+		return ERROR;
+	}
+	
+	Array_QuickSortRecursion_Improve(arr,0,arr->len - 1);
 
 	return OK;
 }

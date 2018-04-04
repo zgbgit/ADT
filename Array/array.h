@@ -22,10 +22,14 @@ Status Array_Assign(Array * arr,int index,char value);
 Status Array_InsertSort(Array * arr);
 /*打印数组中的元素*/
 Status Array_Show( Array * arr );
-
-
-
-
+/*最多5趟排序的希尔排序*/
+Status Array_ShellSort(Array * arr);
+/*冒泡排序*/
+Status Array_BubbleSort(Array * arr);
+/*快速排序*/
+Status Array_QuickSort(Array * arr);
+/*优化栈使用的快速排序*/
+Status Array_QuickSort_Improve(Array * arr);
 
 #endif
 
