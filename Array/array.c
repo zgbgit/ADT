@@ -81,20 +81,19 @@ Status Array_Uint16_Init(Array ** arr,int len)
 	return OK;
 }
 
-Status Array_Int32_Init(Array ** arr,int len)
+Status Array_Init_Int32(Array_Int32 ** arr,int len)
 {
-	Array * Arr_tmp = NULL;
+	Array_Int32 * Arr_tmp = NULL;
 	
-	Arr_tmp = (Array *)malloc(sizeof(Array));
+	Arr_tmp = (Array_Int32 *)malloc(sizeof(Array_Int32));
 	if(NULL == arr)
 	{
 		printf("[ERR]: %s %d\n",__func__,__LINE__);
 		return ERROR;
 	}
 
-	Arr_tmp->base_int32 = (int *)malloc(len*2);
+	Arr_tmp->base_int32 = (int *)malloc(len*4);
 	Arr_tmp->len = len;
-	Arr_tmp->tpye_index = 4;
 	*arr = Arr_tmp;
 
 	return OK;
@@ -120,7 +119,7 @@ Status Array_Uint32_Init(Array ** arr,int len)
 }
 
 
-Status Array_Destroy(Array ** arr)
+Status Array_Destroy_Int32(Array_Int32 ** arr)
 {
 	if(NULL == arr)
 	{
@@ -128,17 +127,14 @@ Status Array_Destroy(Array ** arr)
 		return ERROR;
 	}
 
-	free((*arr)->base);
+	free((*arr)->base_int32);
 	free(*arr);
 
 	return OK;
 }
 
-Status Array_Value(Array * arr,int index,...)
+Status Array_Value_Int32(Array_Int32 * arr,int index,int * value)
 {
-	va_list argp;
-	void * tmp;
-	
 	if(NULL == arr)
 	{
 		printf("[ERR]: %s %d\n",__func__,__LINE__);
@@ -151,91 +147,32 @@ Status Array_Value(Array * arr,int index,...)
 		return ERROR;
 	}
 
-	va_start( argp, index );
-	switch(arr->tpye_index)
-	{
-		case 0:
-			tmp = va_arg(argp, char *);
-			*tmp = *(arr->base_int8 + index);
-			break;
-		case 1:
-			tmp = va_arg(argp, unsigned char *);
-			*tmp = *(arr->base_uint8 + index);
-			break;
-		case 2:
-			tmp = va_arg(argp, short *);
-			*tmp = *(arr->base_int16 + index);
-			break;
-		case 3:
-			tmp = va_arg(argp, unsigned short *);
-			*tmp = *(arr->base_uint16 + index);
-			break;
-		case 4:
-			tmp = va_arg(argp, int *);
-			*tmp = *(arr->base_int32 + index);
-			break;
-		case 5:
-			tmp = va_arg(argp, unsigned int *);
-			*tmp = *(arr->base_uint32 + index);
-			break;
-		case default:
-			printf("[ERR]: %s %d\n",__func__,__LINE__);
-			return ERROR;
-	}
+	*value = *(arr->base_int32 + index);
 
-	va_end(argp); 
 
 	return OK;
 }
 
-Status Array_Assign(Array * arr,int index,...)
+Status Array_Assign_Int32(Array_Int32 * arr,int index,int value)
 {
-	va_list argp; 
-	
 	if(NULL == arr)
 	{
 		printf("[ERR]: %s %d\n",__func__,__LINE__);
 		return ERROR;
-	}
+	} 
 
 	if(index >= arr->len)
 	{
 		printf("[ERR]: %s %d\n",__func__,__LINE__);
 		return ERROR;
 	}
-
-	va_start( argp, index );
-	switch(arr->tpye_index)
-	{
-		case 0:
-			*(arr->base_int8 + index) = va_arg(argp, char);
-			break;
-		case 1:
-			*(arr->base_uint8+ index) = va_arg(argp, unsigned char);
-			break;
-		case 2:
-			*(arr->base_int16 + index) = va_arg(argp, short);
-			break;
-		case 3:
-			*(arr->base_uint16 + index) = va_arg(argp, unsigned short);
-			break;
-		case 4:
-			*(arr->base_int32 + index) = va_arg(argp, int);
-			break;
-		case 5:
-			*(arr->base_uint32 + index) = va_arg(argp, unsigned int);
-			break;
-		case default:
-			printf("[ERR]: %s %d\n",__func__,__LINE__);
-			return ERROR;
-	}
-
-	va_end(argp); 
-
+	
+	*(arr->base_int32 + index) = value;
+	
 	return OK;
 }
 
-Status Array_InsertSort(Array * arr)
+Status Array_InsertSort_Int32(Array_Int32 * arr)
 {
 	int i,j;
 	char tmp;
@@ -251,28 +188,27 @@ Status Array_InsertSort(Array * arr)
 		return OK;
 	}
 
-	 
 	for(i = 1;i < arr->len;i++)
 	{
-		if(*(arr->base + i) < *(arr->base + i - 1))//新插入的元素如果不是比有序表中最后一个大，就要进行插入排序
+		if(*(arr->base_int32+ i) < *(arr->base_int32 + i - 1))//新插入的元素如果不是比有序表中最后一个大，就要进行插入排序
 		{
-			tmp = *(arr->base + i);//将要进行插入的值备份
+			tmp = *(arr->base_int32 + i);//将要进行插入的值备份
 			//arr->base[i] = arr->base[i-1];//有序表中最后一个元素移动到当前有序表最后
-			for(j = i - 1;j >= 0 && tmp < *(arr->base + j);j-=1)
+			for(j = i - 1;j >= 0 && tmp < *(arr->base_int32 + j);j-=1)
 			{
-				*(arr->base + j + 1) = *(arr->base + j);//有序表后移
+				*(arr->base_int32 + j + 1) = *(arr->base_int32 + j);//有序表后移
 			}
-			*(arr->base + j + 1) = tmp;//插入
+			*(arr->base_int32 + j + 1) = tmp;//插入
 		}
 	}
 
 	return OK;
 }
 
-static Status Array_ShellInsert(Array * arr, int dk)
+static Status Array_ShellInsert_Int32(Array_Int32 * arr, int dk)
 {
 	int i,j;
-	char tmp;
+	int tmp;
 	
 	if(NULL == arr)
 	{
@@ -287,38 +223,38 @@ static Status Array_ShellInsert(Array * arr, int dk)
 
 	for(i = dk;i < arr->len;i++)
 	{
-		if(*(arr->base + i) < *(arr->base + i - dk))
+		if(*(arr->base_int32 + i) < *(arr->base_int32 + i - dk))
 		{
-			tmp = *(arr->base + i);
+			tmp = *(arr->base_int32 + i);
 			
-			for(j = i - dk;j >= 0 && tmp < *(arr->base + j);j-=dk)
+			for(j = i - dk;j >= 0 && tmp < *(arr->base_int32 + j);j-=dk)
 			{
-				*(arr->base + j + dk) = *(arr->base + j);
+				*(arr->base_int32 + j + dk) = *(arr->base_int32 + j);
 			}
-			*(arr->base + j + dk) = tmp;
+			*(arr->base_int32 + j + dk) = tmp;
 		}
 	}
 
 	return OK;
 }
 
-Status Array_ShellSort(Array * arr)
+Status Array_ShellSort_Int32(Array_Int32 * arr)
 {
 	int dlta[] = {9,5,3,2,1};
 	int i;
 
 	for(i = 0;i < 5;i++)
 	{
-		Array_ShellInsert(arr,dlta[i]);
+		Array_ShellInsert_Int32(arr,dlta[i]);
 	}
 
 	return OK;
 }
 
-Status Array_BubbleSort(Array * arr)
+Status Array_BubbleSort_Int32(Array_Int32 * arr)
 {
 	int i,j;
-	char tmp;
+	int tmp;
 	
 	if(NULL == arr)
 	{
@@ -335,20 +271,20 @@ Status Array_BubbleSort(Array * arr)
 	{
 		for(j = 0;j < (arr->len - i - 1);j++)
 		{
-			if(*(arr->base + j + 1) < *(arr->base + j))
+			if(*(arr->base_int32 + j + 1) < *(arr->base_int32 + j))
 			{
-				tmp = *(arr->base + j + 1);
-				*(arr->base + j + 1) = *(arr->base + j);
-				*(arr->base + j) = tmp;
+				tmp = *(arr->base_int32 + j + 1);
+				*(arr->base_int32 + j + 1) = *(arr->base_int32 + j);
+				*(arr->base_int32 + j) = tmp;
 			}
 		}
 	}
 	return OK;
 }
 
-static int Array_Partition(Array * arr, int low, int high)
+static int Array_Partition_Int32(Array_Int32 * arr, int low, int high)
 {
-	char pivokey = 0;
+	int pivokey = 0;
 
 	if(NULL == arr)
 	{
@@ -356,34 +292,34 @@ static int Array_Partition(Array * arr, int low, int high)
 		return ERROR;
 	}
 
-	pivokey = *(arr->base + low);
+	pivokey = *(arr->base_int32 + low);
 	while(low < high)
 	{
-		while((low < high) && (*(arr->base + high) >= pivokey)) --high;
-		*(arr->base + low) = *(arr->base + high);
-		while((low < high) && (*(arr->base + low) <= pivokey)) ++low;
-		*(arr->base + high) = *(arr->base + low);
+		while((low < high) && (*(arr->base_int32 + high) >= pivokey)) --high;
+		*(arr->base_int32 + low) = *(arr->base_int32 + high);
+		while((low < high) && (*(arr->base_int32 + low) <= pivokey)) ++low;
+		*(arr->base_int32 + high) = *(arr->base_int32 + low);
 	}
-	*(arr->base + low) = pivokey;
+	*(arr->base_int32 + low) = pivokey;
 
 	return low;
 }
 
-static Status Array_QuickSortRecursion(Array * arr, int low, int high)
+static Status Array_QuickSortRecursion_Int32(Array_Int32 * arr, int low, int high)
 {
 	int pivoloc = 0;
 	
 	if(low < high)
 	{
-		pivoloc = Array_Partition(arr,low,high);
-		Array_QuickSortRecursion(arr,low,pivoloc - 1);
-		Array_QuickSortRecursion(arr,pivoloc + 1,high);
+		pivoloc = Array_Partition_Int32(arr,low,high);
+		Array_QuickSortRecursion_Int32(arr,low,pivoloc - 1);
+		Array_QuickSortRecursion_Int32(arr,pivoloc + 1,high);
 	}
 
 	return OK;
 }
 
-Status Array_QuickSort(Array * arr)
+Status Array_QuickSort_Int32(Array_Int32 * arr)
 {
 	if(NULL == arr)
 	{
@@ -391,34 +327,34 @@ Status Array_QuickSort(Array * arr)
 		return ERROR;
 	}
 	
-	Array_QuickSortRecursion(arr,0,arr->len - 1);
+	Array_QuickSortRecursion_Int32(arr,0,arr->len - 1);
 
 	return OK;
 }
 
-static Status Array_QuickSortRecursion_Improve(Array * arr, int low, int high)
+static Status Array_QuickSortRecursion_Improve_Int32(Array_Int32 * arr, int low, int high)
 {
 	int pivoloc = 0;
 	
 	if(low < high)
 	{
-		pivoloc = Array_Partition(arr,low,high);
+		pivoloc = Array_Partition_Int32(arr,low,high);
 		if(pivoloc >= ((low + high) >> 1))
 		{
-			Array_QuickSortRecursion(arr,pivoloc + 1,high);
-			Array_QuickSortRecursion(arr,low,pivoloc - 1);
+			Array_QuickSortRecursion_Int32(arr,pivoloc + 1,high);
+			Array_QuickSortRecursion_Int32(arr,low,pivoloc - 1);
 		}
 		else
 		{
-			Array_QuickSortRecursion(arr,low,pivoloc - 1);
-			Array_QuickSortRecursion(arr,pivoloc + 1,high);
+			Array_QuickSortRecursion_Int32(arr,low,pivoloc - 1);
+			Array_QuickSortRecursion_Int32(arr,pivoloc + 1,high);
 		}
 	}
 
 	return OK;
 }
 
-Status Array_QuickSort_Improve(Array * arr)
+Status Array_QuickSort_Improve_Int32(Array_Int32 * arr)
 {
 	if(NULL == arr)
 	{
@@ -426,12 +362,12 @@ Status Array_QuickSort_Improve(Array * arr)
 		return ERROR;
 	}
 	
-	Array_QuickSortRecursion_Improve(arr,0,arr->len - 1);
+	Array_QuickSortRecursion_Improve_Int32(arr,0,arr->len - 1);
 
 	return OK;
 }
 
-Status Array_Show( Array * arr )
+Status Array_Show_Int32( Array_Int32 * arr )
 {
 	int i;
 
@@ -443,7 +379,7 @@ Status Array_Show( Array * arr )
 
 	for(i = 0;i < arr->len; i++)
 	{
-		printf("%3d ",*(arr->base + i));
+		printf("%6d ",*(arr->base_int32 + i));
 		if(0 == ((i + 1) % 10))
 		{
 			printf("\n");
